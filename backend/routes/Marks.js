@@ -12,6 +12,10 @@ router.post("", async(req, res) => {
 
         console.log("Marks created")
         let {student, math, physics, chemistry} = req.body;
+        math = Number(math);
+        physics = Number(physics);
+        chemistry = Number(chemistry);
+        
         if(!mongoose.Types.ObjectId.isValid(student)) {
             throw new Error("Invalid Student id");
         } else {
@@ -89,8 +93,8 @@ router.get("/student/:id", async(req, res) => {
         } 
         
         const result = await Marks.find({student: req.params.id});
-        if(!result) {
-            throw new Error("Invalid Student id");
+        if(result.length == 0) {
+            throw new Error("No record found");
           
         }
         return res.status(200).send(result);
@@ -100,10 +104,13 @@ router.get("/student/:id", async(req, res) => {
 })
 
 
-router.put("/:id", async(req, res) => {
+router.put("/update/:id", async(req, res) => {
     try {
 
         let {student, math, physics, chemistry} = req.body;
+        math = Number(math);
+        physics = Number(physics);
+        chemistry = Number(chemistry);
         let total = math + physics + chemistry;
         let average = (total/3);
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -131,15 +138,9 @@ router.delete("/:id", async(req, res) => {
             throw new Error("Invalid mark Id");
         } 
 
-        let record = await Student.findById(req.params.id)
-        // console.log(record)
-        if(! record) {
-            throw new Error("student not found");
-           
-        }
-
         const result = await Marks.deleteOne({_id: req.params.id});
-        if(!result) {
+        console.log(result);
+        if(result.deletedCount == 0) {
             throw new Error("Mark not found");
             // return res.status(400).send( {"status ": "record not found"});
         }

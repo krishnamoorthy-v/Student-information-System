@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 let MList = () => {
 
     const location = useLocation();
-
+    const token = JSON.parse(localStorage.getItem("token")).token;
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [data, setData] = useState([]);
@@ -20,7 +20,11 @@ let MList = () => {
 
         const fetchData = () => {
 
-            axios.get(GET_STUDENT_MARK_LIST+student_id)
+            axios.get(GET_STUDENT_MARK_LIST+student_id, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then( (res) => {
                 
                 setData(res.data);
@@ -36,7 +40,11 @@ let MList = () => {
 
     const handleDelete = (id)=> {
 
-        axios.delete(DELETE_ONE_MARK+id)
+        axios.delete(DELETE_ONE_MARK+id, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
         .then( () => {
             setSuccess("Deleted successfully !");
             setData( (oldData) => oldData.filter( (item) => item._id !== id));
@@ -54,7 +62,12 @@ let MList = () => {
     }
 
     const handleSendEmail = (mark_id) => {
-        axios.post(SEND_EMAIL+mark_id)
+        
+        axios.post(SEND_EMAIL+mark_id, {}, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
         .then( ()=> {
             setError("");
             setSuccess("Email sended successfully !");
@@ -105,7 +118,7 @@ let MList = () => {
           { data.map( (item, index) => (
   
           <tr key={index}>     
-              <td>{index}</td>
+              <td>{index+1}</td>
               <td>{item.math}</td>
               <td>{item.physics}</td>
               <td>{item.chemistry}</td>

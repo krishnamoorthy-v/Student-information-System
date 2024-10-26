@@ -3,11 +3,11 @@ const router = express.Router();
 const Marks = require("../models/Marks");
 const { default: mongoose } = require("mongoose");
 const Student = require("../models/Student");
+const {authorize} = require("../service/JWTservices")
 
 
 
-
-router.post("", async(req, res) => {
+router.post("", authorize("create"), async(req, res) => {
     try {
 
         console.log("Marks created")
@@ -56,7 +56,7 @@ router.post("", async(req, res) => {
 
 
 
-router.get("/all", async(req, res) => {
+router.get("/all", authorize("read"), async(req, res) => {
     try {
         const mark = await Marks.find();
         if(mark.length == 0) {
@@ -68,7 +68,7 @@ router.get("/all", async(req, res) => {
     }
 })
 
-router.get("/:id", async(req, res) => {
+router.get("/:id", authorize("read"), async(req, res) => {
     try {
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
             throw new Error("Invalid mark Id");
@@ -84,7 +84,7 @@ router.get("/:id", async(req, res) => {
     }
 })
 
-router.get("/student/:id", async(req, res) => {
+router.get("/student/:id", authorize("read"), async(req, res) => {
     try {
 
         // console.log(req.params.id)
@@ -104,7 +104,7 @@ router.get("/student/:id", async(req, res) => {
 })
 
 
-router.put("/update/:id", async(req, res) => {
+router.put("/update/:id", authorize("update"), async(req, res) => {
     try {
 
         let {student, math, physics, chemistry} = req.body;
@@ -130,7 +130,7 @@ router.put("/update/:id", async(req, res) => {
 })
 
 
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", authorize("delete"), async(req, res) => {
     try {
 
     

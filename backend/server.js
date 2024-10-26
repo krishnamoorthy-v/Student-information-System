@@ -4,9 +4,12 @@ const mongoose = require("mongoose")
 const studentRouter = require("./routes/Student")
 const markRouter = require("./routes/Marks")
 const emailRouter = require("./routes/email")
+const userRouter = require("./routes/User")
+
+
 const cors = require("cors")
 
-const PORT = 3000;
+const PORT = 8080;
 
 let app = express()
 app.use(cors())
@@ -20,6 +23,8 @@ mongoose.connect("mongodb://localhost:27017/school", {useNewUrlParser: true, use
 app.use('/student', studentRouter);
 app.use('/marks', markRouter);
 app.use("/email", emailRouter);
+app.use("/user",userRouter);
+
 
 app.listen(PORT, ()=> {
     console.log(`Server running on Port ${PORT}`);

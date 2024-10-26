@@ -15,14 +15,18 @@ let UpdateStud = () => {
     const [gender, setGender] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    
+    const token = JSON.parse(localStorage.getItem("token")).token;
     let {student_id} = location.state || {}
 
     useEffect( ()=> {
 
         const fetchData = () => {
 
-            axios.get(GET_ONE_STUDENT+student_id)
+            axios.get(GET_ONE_STUDENT+student_id, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then( (res) => {
                 // console.log(res.data);
                 let data = res.data;
@@ -70,7 +74,11 @@ let UpdateStud = () => {
         } else {
 
 
-            axios.put(UPDATE_STUDENT+student_id, formdata)
+            axios.put(UPDATE_STUDENT+student_id, formdata, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            } )
             .then( (res)=> {
                 console.log(res.data);
                 setSuccess("Succefully updated !");

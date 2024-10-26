@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
 const Marks = require("../models/Marks");
 const Student = require("../models/Student");
 const sendMail = require("../service/mail");
+const {authorize} = require("../service/JWTservices")
 
 
 
-
-router.post("/mark/:id", async(req, res) => {
+router.post("/mark/:id", authorize("create"), async(req, res) => {
     try {
         console.log("from the email");
         if( !mongoose.Types.ObjectId.isValid(req.params.id)) {

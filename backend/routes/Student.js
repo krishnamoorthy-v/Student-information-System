@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student");
 const { mongoose } = require("mongoose");
+const {authorize} = require("../service/JWTservices")
 
-router.post("", async(req, res) => {
+router.post("", authorize("create"), async(req, res) => {
     try {
         // console.log("student created")
         let dob = req.body.date_of_birth;
@@ -53,7 +54,7 @@ router.post("", async(req, res) => {
     }
 })
 
-router.get("/all", async(req, res) => {
+router.get("/all", authorize("read"), async(req, res) => {
     try {
         const student = await Student.find();
         if(student.length == 0) {
@@ -65,7 +66,7 @@ router.get("/all", async(req, res) => {
     }
 })
 
-router.get("/:id", async(req, res) => {
+router.get("/:id", authorize("read"), async(req, res) => {
     try {
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
             throw new Error("Invalid student id");
@@ -83,7 +84,7 @@ router.get("/:id", async(req, res) => {
 
 
 
-router.put("/:id", async(req, res) => {
+router.put("/:id", authorize("update"), async(req, res) => {
     try {
         const updated_record = req.body;
         console.log(updated_record)
@@ -103,7 +104,7 @@ router.put("/:id", async(req, res) => {
 })
 
 
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", authorize("delete"), async(req, res) => {
     try {
        
         if(!mongoose.Types.ObjectId.isValid(req.params.id)) {

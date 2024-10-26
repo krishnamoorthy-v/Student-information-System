@@ -13,6 +13,7 @@ const StudInput = () => {
     const [gender, setGender] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+   const token = JSON.parse(localStorage.getItem("token")).token;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,7 +34,11 @@ const StudInput = () => {
             setError("Invalid Gender");
         } else {
        
-            axios.post(ADD_STUDENT, formdata)
+            axios.post(ADD_STUDENT, formdata, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then( (res)=> {
                 setError("");
                 setSuccess("Submitted!");

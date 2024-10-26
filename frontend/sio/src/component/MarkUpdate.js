@@ -12,7 +12,7 @@ let UpdateMark = () => {
     const [math, setMath ] = useState("");
     const [physics, setPhysics ] = useState("");
     const [chemistry, setChemistry ] = useState("");
-   
+    const token = JSON.parse(localStorage.getItem("token")).token;
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     
@@ -22,7 +22,11 @@ let UpdateMark = () => {
 
         const fetchData = () => {
 
-            axios.get(GET_MARK+mark_id)
+            axios.get(GET_MARK+mark_id, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then( (res) => {
                 // console.log(res.data);
                 let data = res.data;
@@ -67,7 +71,11 @@ let UpdateMark = () => {
         } else {
 
 
-            axios.put(UPDATE_MARK+mark_id, formdata)
+            axios.put(UPDATE_MARK+mark_id, formdata, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            } )
             .then( (res)=> {
                 console.log(res.data);
                 setSuccess("Succefully updated !");

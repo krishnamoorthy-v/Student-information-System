@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 let StudList = () => {
 
+    const token = JSON.parse(localStorage.getItem("token")).token;
     const [data, setData] = useState([]);
     const [error, setError] = useState("");
 
@@ -15,7 +16,12 @@ let StudList = () => {
     useEffect( ()=> {
 
         const fetchData = () => {
-            axios.get(GET_ALL_STUDENT)
+            // console.log(token);
+            axios.get(GET_ALL_STUDENT, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then( (res) => {
                 // console.log(res.data);
                 setData(res.data);
@@ -29,14 +35,20 @@ let StudList = () => {
 
     }, []);
 
+  
+
     const handleDelete = (id)=> {
 
-        axios.delete(DELETE_ONE_STUDENT+id)
+        axios.delete(DELETE_ONE_STUDENT+id, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
         .then( (res) => {
             setData( (oldData) => oldData.filter( (item) => item._id !== id))
         })
         .catch( (err) => {
-            setError(err.respose.data);
+            setError(err.response.data);
         })
     }
 
@@ -52,6 +64,15 @@ let StudList = () => {
     const handleMarkView = (student_id) => {
         navigate('/marklist', {state: {student_id} } );
     }
+
+    const formatDate = (dob) => {
+        const date = new Date(dob);
+        const year = date.getFullYear();
+        const month=String(date.getMonth()+1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
 
     return (
         <Table responsive striped bordered hover>
@@ -81,11 +102,11 @@ let StudList = () => {
         {data.map( (item, index) => (
 
         <tr key={index}>     
-            <td>{index}</td>
+            <td>{index+1}</td>
             <td>{item.name}</td>
             <td>{item.email}</td>
             <td>{item.gender}</td>
-            <td>{item.date_of_birth}</td>
+            <td>{ formatDate(item.date_of_birth)  }</td>
 
             <td><Button variant="warning" onClick={ ()=> handleUpdate(item._id)}>Update</Button></td>
             <td><Button variant="danger" onClick={ ()=>handleDelete(item._id) }>Delete </Button></td>

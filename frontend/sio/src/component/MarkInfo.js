@@ -11,7 +11,7 @@ const MarkInput = () => {
     const location = useLocation();
 
     const { student_id } = location.state || {}
-    
+    const token = JSON.parse(localStorage.getItem("token")).token;
     const [math, setMath] = useState("");
     const [physics, setPhysics] = useState("");
     const [chemistry, setChemistry] = useState("");
@@ -35,7 +35,11 @@ const MarkInput = () => {
             setSuccess("");
             setError("Invalid chemistry mark");
         } else {
-            axios.post(ADD_STUDENT_MARK, formdata)
+            axios.post(ADD_STUDENT_MARK, formdata, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
             .then((res) => {
                 console.log(res);
                 setError("");
